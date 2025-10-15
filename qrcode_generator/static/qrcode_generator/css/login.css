@@ -1,10 +1,18 @@
+/* Estilização da tela de login - v2 (Elegante e Profissional) */
 :root {
-  --azulEscuro-nort: #021B33;
-  --azul-nort: #0d71a7;
-  --branco-nort: #F7F7F7;
-  --dourado-nort: #FFD700;
-  --erro-nort: #ff4d4d;
-  --gradiente-center: var(--azul-nort);
+    --color-background-start: #f4f7f6;
+    --color-background-mid: #e9ecef;
+    --color-background-end: #dee2e6;
+    --color-white: #ffffff;
+    --color-gray-dark: #343a40;
+    --color-gray-medium: #6c757d;
+    --color-gray-light: #ced4da;
+    --color-primary: #007bff;
+    --color-primary-hover: #0056b3;
+    --color-error: #dc3545;
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 15px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
 }
 
 * {
@@ -13,165 +21,128 @@
     box-sizing: border-box;
 }
 
-body, html {
-    height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: var(--azulEscuro-nort);
-    overflow: hidden;
-}
-
-/* Wrapper dividido */
-.login-wrapper {
+body {
+    font-family: 'Inter', sans-serif;
     display: flex;
-    height: 100vh;
-    width: 100%;
-}
-
-/* Formulário à esquerda */
-.login-box {
-    flex: 1;
-    max-width: 460px;
-    padding: 80px 50px;
-    background: radial-gradient(circle at center, var(--azul-nort) 0%, var(--azulEscuro-nort) 65%);
-    color: var(--branco-nort);
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    animation: fadeInLeft 0.8s ease;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
-}
-
-@keyframes pulsarGradiente {
-  0% {
-    --gradiente-center: var(--azul-nort);
-  }
-  50% {
-    --gradiente-center: #1a90c9; /* tom mais claro para pulsar */
-  }
-  100% {
-    --gradiente-center: var(--azulEscuro-nort);
-  }
-}
-/* Logo */
-.login-logo {
-    width: 140px;
-    margin-bottom: 30px;
-}
-
-/* Campos com ícones */
-.input-icon {
-    position: relative;
-    width: 100%;
-    margin-bottom: 25px;
+    min-height: 100vh;
+    color: var(--color-gray-dark);
     
+    /* Fundo Gradiente Animado */
+    background: linear-gradient(135deg, var(--color-background-start), var(--color-background-mid), var(--color-background-end));
+    background-size: 200% 200%;
+    animation: gradientAnimation 15s ease infinite;
 }
 
-.input-icon i {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    color: var(--azul-nort);
-    font-size: 1.1rem;
-    cursor: pointer;
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+}
+
+.login-box {
+    background-color: var(--color-white);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.login-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header .logo {
+    max-width: 180px;
+    margin-bottom: 1.5rem;
+}
+
+.login-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-gray-dark);
+}
+
+.login-header p {
+    color: var(--color-gray-medium);
+    font-size: 0.95rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--color-gray-medium);
+    font-size: 0.9rem;
+}
+
+.form-group label i {
+    margin-right: 8px;
 }
 
 .form-control {
-    background-color: transparent;
-    border: none;
-    border-bottom: 1.5px solid var(--branco-nort);
-    border-radius: 0;
-    color: var(--branco-nort);
-    padding: 12px 40px 12px 12px;
-    font-size: 1rem;
     width: 100%;
-    transition: all 0.3s;
-}
-
-.form-control::placeholder {
-    color: var(--branco-nort);
-    opacity: 0.75;
+    padding: 12px 15px;
+    border: 1px solid var(--color-gray-light);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control:focus {
-    border-bottom: 1.5px solid var(--dourado-nort);
-    background-color: rgba(255, 255, 255, 0.05);
     outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-/* Botão de login */
 .btn-login {
-    background-color: var(--branco-nort);
-    color: var(--azulEscuro-nort);
-    font-weight: bold;
-    border-radius: 6px;
-    padding: 12px;
-    margin-top: 25px;
-    border: none;
-    transition: 0.3s ease;
-    font-size: 1rem;
     width: 100%;
+    padding: 14px;
+    background-color: var(--color-gray-dark);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-login:hover {
-    background-color: var(--dourado-nort);
-    color: var(--azulEscuro-nort);
-    transform: scale(1.03);
+    background-color: #23272b; /* Tom mais escuro do cinza */
+    transform: translateY(-2px);
 }
 
-/* Mensagens de erro */
-.text-danger {
-    color: var(--erro-nort);
+/* Alerta de Erro */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
     font-size: 0.9rem;
-    margin-bottom: 15px;
 }
 
-/* Área da imagem à direita */
-.login-wrapper::after {
-  content: "";
-  flex: 1;
-  background: url("../images/login-bg1.jpg") no-repeat center center; /* Caminho corrigido */
-  background-size: cover;
-  animation: fadeInRight 0.8s ease;
-}
-
-/* Responsivo */
-@media (max-width: 768px) {
-    .login-wrapper {
-        flex-direction: column;
-    }
-
-    .login-wrapper::after {
-        display: none;
-    }
-
-    .login-box {
-        max-width: 100%;
-        padding: 60px 30px;
-        box-shadow: none;
-    }
-}
-
-/* Animações */
-@keyframes fadeInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.alert-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--color-error);
+    border: 1px solid rgba(220, 53, 69, 0.2);
 }

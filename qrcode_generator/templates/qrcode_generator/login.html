@@ -1,47 +1,56 @@
 {% load static %}
-{% load i18n %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}QRcode - Generator{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{% static 'qrcode_generator/images/logo.png' %}">
-    <link href="{% static 'qrcode_generator/css/login.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Login - Gerador de QR Code</title>
+    
+    <link rel="icon" href="{% static 'qrcode_generator/images/logo.png' %}" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'qrcode_generator/css/login.css' %}">
 </head>
 <body>
 
-<div class="login-wrapper">
-    <div class="login-box text-center">
-        <img src="https://static.wixstatic.com/media/de50eb_ad9cb6f8ec9d429e87290a369ebdf57d~mv2.png" 
-             alt="Logo" 
-             class="login-logo mb-3">
-
-        {% if messages %}
-            {% for message in messages %}
-                <p class="text-danger text-center">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-icon mb-3">
-                <i class="fa fa-user"></i>
-                <input type="text" name="username" class="form-control" placeholder="Usuário" required>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <img src="{% static 'qrcode_generator/images/logoFull.png' %}" alt="Logo da Empresa" class="logo">
+                <h2>Acesse sua Conta</h2>
+                <p>Bem-vindo de volta! Insira suas credenciais.</p>
             </div>
-            <div class="input-icon mb-3">
-                <i class="fa fa-eye-slash" id="togglePassword"></i>
-                <input type="password" name="password" id="password" class="form-control" placeholder="Senha" required>
-            </div>
-            <button type="submit" class="btn btn-login w-100">ENTRAR</button>
-        </form>
+            
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-error">
+                        {% for error in form.non_field_errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="id_username"><i class="fas fa-user"></i> Usuário</label>
+                    <input type="text" name="username" id="id_username" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password"><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" name="password" id="id_password" class="form-control" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+        </div>
     </div>
-</div>
 
 </body>
 </html>
-
-{% block extra_js %}
-    <script src="{% static 'qrcode_generator/js/login.js' %}"></script>
-{% endblock %}
