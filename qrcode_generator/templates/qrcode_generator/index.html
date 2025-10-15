@@ -1,0 +1,187 @@
+{% extends 'qrcode_generator/base.html' %}
+{% load static %}
+
+{% block title %}Gerador de QR Code - Intranet{% endblock %}
+
+{% block extra_css %}
+    <link href="{% static 'qrcode_generator/css/index_styles.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="text-center mb-5 fade-in">
+            <div class="feature-icon mx-auto mb-3">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <h1 class="display-5 fw-bold mb-3">Gerador de QR Code</h1>
+        </div>
+
+        <div class="card slide-in">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Gerar Novo QR Code</h5>
+            </div>
+            <div class="card-body">
+                <!-- ✅ CORREÇÃO FINAL: Usando os nomes EXATOS do seu urls.py -->
+                <form id="qrForm" 
+                      data-generate-url="{% url 'generate' %}"
+                      data-download-url="{% url 'download' %}"
+                      data-upload-pdf-url="{% url 'upload_pdf' %}">
+                    
+                    <div class="mb-3">
+                        <label for="qrTitle" class="form-label"><i class="fas fa-heading me-1"></i>Título</label>
+                        <input type="text" class="form-control" id="qrTitle" name="title" placeholder="Ex: Link da Reunião Semanal" required>
+                        <div class="form-text">Dê um nome para identificar facilmente seu QR Code no histórico.</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="qrType" class="form-label"><i class="fas fa-tag me-1"></i>Tipo de QR Code</label>
+                            <select class="form-select" id="qrType" name="type" required>
+                                <option value="text">Texto Simples</option>
+                                <option value="url">URL/Link</option>
+                                <option value="pdf">PDF (Upload)</option>
+                                <option value="email">Email</option>
+                                <option value="phone">Telefone</option>
+                                <option value="sms">SMS</option>
+                                <option value="wifi">WiFi</option>
+                                <option value="vcard">vCard (Contato)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="qrSize" class="form-label"><i class="fas fa-expand-arrows-alt me-1"></i>Tamanho</label>
+                            <select class="form-select" id="qrSize" name="size">
+                                <option value="8">Pequeno (8px)</option>
+                                <option value="10" selected>Médio (10px)</option>
+                                <option value="12">Grande (12px)</option>
+                                <option value="15">Extra Grande (15px)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" id="content-wrapper">
+                        <label for="qrContent" class="form-label"><i class="fas fa-edit me-1"></i>Conteúdo</label>
+                        <textarea class="form-control" id="qrContent" name="content" rows="4" placeholder="Digite o conteúdo do seu QR Code..." required></textarea>
+                        <div class="form-text" id="contentHelp">Digite o texto, URL, ou outra informação. Para PDFs, selecione a opção 'PDF (Upload)'.</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="qrBorder" class="form-label"><i class="fas fa-border-style me-1"></i>Borda</label>
+                            <select class="form-select" id="qrBorder" name="border">
+                                <option value="2">Fina (2px)</option>
+                                <option value="4" selected>Normal (4px)</option>
+                                <option value="6">Grossa (6px)</option>
+                                <option value="8">Extra Grossa (8px)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                             <button type="submit" class="btn btn-primary w-100" id="generateBtn">
+                                <i class="fas fa-magic me-2"></i>Gerar QR Code
+                                <div class="spinner-border spinner-border-sm ms-2 loading-spinner" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="alertContainer"></div>
+
+                <div id="qrResult" class="qr-result">
+                    <h5 class="mb-3">
+                        <i class="fas fa-check-circle text-success me-2"></i>QR Code Gerado com Sucesso!
+                    </h5>
+                    <p class="lead" id="qrTitleDisplay"></p>
+                    <div class="mb-3">
+                        <img id="qrImage" src="" alt="QR Code" class="qr-image">
+                    </div>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <button type="button" class="btn btn-outline-primary" id="downloadBtn">
+                            <i class="fas fa-download me-2"></i>Download PNG
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="newQrBtn">
+                            <i class="fas fa-plus me-2"></i>Gerar Novo
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Conteúdo: <span id="qrContentDisplay"></span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h5 class="card-title">Seguro</h5>
+                        <p class="card-text">Todos os QR Codes são gerados localmente, garantindo a segurança dos seus dados.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                        <h5 class="card-title">Rápido</h5>
+                        <p class="card-text">Geração instantânea de QR Codes com interface otimizada para máxima produtividade.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h5 class="card-title">Responsivo</h5>
+                        <p class="card-text">Interface adaptável que funciona perfeitamente em qualquer dispositivo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="pdfUploadModal" tabindex="-1" aria-labelledby="pdfUploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfUploadModalLabel"><i class="fas fa-file-pdf me-2"></i>Upload de Arquivo PDF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="pdfUploadForm">
+                    <div class="mb-3">
+                        <label for="pdfTitle" class="form-label">Título do Documento</label>
+                        <input type="text" class="form-control" id="pdfTitle" name="title" required placeholder="Ex: Relatório Mensal">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pdfFile" class="form-label">Arquivo PDF</label>
+                        <input class="form-control" type="file" id="pdfFile" name="pdf_file" required accept=".pdf">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="uploadPdfBtn">
+                    <i class="fas fa-upload me-2"></i>Fazer Upload
+                    <div class="spinner-border spinner-border-sm ms-2 d-none" id="pdfUploadSpinner"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+    <script src="{% static 'qrcode_generator/js/theme.js' %}"></script>
+    <script src="{% static 'qrcode_generator/js/index.js' %}"></script>
+{% endblock %}
